@@ -1,0 +1,5 @@
+root 2022-09-09 18:33:38,123 INFO  :  hello __main__.py <module> ln:(6)
+root 2022-09-09 18:41:15,702 INFO  :  hello __main__.py <module> ln:(6)
+__main__ 2022-09-09 18:41:15,704 INFO  :  hiiii __main__.py <module> ln:(10)
+root 2022-09-09 19:29:57,434 INFO  :  hello __main__.py <module> ln:( 6 )
+__main__ 2022-09-09 19:29:57,434 INFO  :  hiiii __main__.py <module> ln:( 13 )
