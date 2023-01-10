@@ -5,11 +5,11 @@
     #     2. Do a bulk load for these two table for respective dataset 
     #     3. read these dataset in pandas as a dataframe 
     #     4. Convert attribute dataset in json format 
-#     5. Store this dataset into mongodb
-#     6. in sql task try to perform left join operation with attrubute dataset and dress dataset on column Dress_ID
-#     7. Write a sql query to find out how many unique dress that we have based on dress id 
-#     8. Try to find out how mnay dress is having recommendation 0
-#     9. Try to find out total dress sell for individual dress id 
+    #     5. Store this dataset into mongodb
+    #     6. in sql task try to perform left join operation with attrubute dataset and dress dataset on column Dress_ID
+    #     7. Write a sql query to find out how many unique dress that we have based on dress id 
+    #     8. Try to find out how mnay dress is having recommendation 0
+    #     9. Try to find out total dress sell for individual dress id 
 #     10. Try to find out a third highest most selling dress id 
 
 
@@ -123,19 +123,55 @@ def bulk_read():
 # bulk_load()
 a,s=bulk_read()
     #     4. Convert attribute dataset in json format 
-print((a.to_json(orient='records')[0]))
+# print((a.to_json(orient='records')[0]))
 #     5. Store this dataset into mongodb
 def to_mongo(sales=(s.to_dict(orient='records')),attr=a.to_dict(orient='records')):
     
     
-    for i in range(len(sales)):
-        
+    for i in range(len(sales)): 
        sales[i]['Date']=pd.to_datetime(sales[i]['Date'])
+    
     mongo['dress']['sales'].insert_many(sales)
     mongo['dress']['attributes'].insert_many(attr)
 
-to_mongo()
+# to_mongo()    # Done
+# print([i for i in mongo['dress']['sales'].find()])       # Test
 
-    
+#     6. in sql task try to perform left join operation with attrubute dataset and dress dataset on column Dress_ID
+def leftjoinSQL():
+    mys_cur.execute('''
+                        SELECT * FROM dress.attributes
+                        LEFT JOIN dress.sales on dress.attributes.CRA = dress.sales.Dress_ID
+                        ;
+                    ''')
+    print(mys_cur.fetchall())
+
+# leftjoinSQL()
+#     7. Write a sql query to find out how many unique dress that we have based on dress id 
+def getnoofUniqueDressID():
+    mys_cur.execute("SELECT COUNT(DISTINCT(Dress_ID)) FROM dress.sales;")
+    return mys_cur.fetchall()[0][0]
+# print(getnoofUniqueDressID())
+# 8. Try to find out how mnay dress is having recommendation 0 
+def rec0dresscount():
+    mys_cur.execute(r'''SELECT COUNT(DISTINCT(CRA)) FROM dress.attributes
+                        WHERE`attributes`.`Recommendation`=0;''')
+    return mys_cur.fetchall()[0][0]
+# print(rec0dresscount())
+
+# 9 Try to find out total dress sell for individual dress id
+def gettotalsales():
+    mys_cur.execute('''SELECT Dress_ID,SUM(Sales) AS `Total sales` FROM dress.sales GROUP BY Dress_ID;''')
+    return mys_cur.fetchall()
+# print(gettotalsales())
+
+#     10. Try to find out a third highest most selling dress id 
+def HighestSales3rd():
+    mys_cur.execute("""SELECT Dress_ID,SUM(Sales) AS `Total sales` FROM dress.sales
+                        GROUP BY Dress_ID
+                        ORDER BY 2 DESC 
+                        LIMIT 1 OFFSET 2""")
+    return mys_cur.fetchall()
+# print(HighestSales3rd())
 
 close_conn()
