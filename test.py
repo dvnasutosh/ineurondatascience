@@ -5,7 +5,7 @@ def isHappy(num,b:list=[]):
     
     if digsq==1:
         b=num=digsq=None
-        b=None
+        b=[]
         del b
         del num
         del digsq
@@ -13,7 +13,7 @@ def isHappy(num,b:list=[]):
         return True
     elif digsq in b:
         b=num=digsq=None
-        b=None
+        b=[]
         del b
         del num
         del digsq
@@ -23,7 +23,7 @@ def isHappy(num,b:list=[]):
         b.append(digsq)
         ret=isHappy(digsq,b)
         b=num=digsq=None
-        b=None
+        b=[]
         del b
         del num
         del digsq
@@ -35,7 +35,7 @@ def isHappy(num,b:list=[]):
 x=[]
 dec=False
 for j in range(100):
-    dec=isHappy(j)
+    dec=isHappy(j,b=[])
     if dec:
         x.append(j)
 
